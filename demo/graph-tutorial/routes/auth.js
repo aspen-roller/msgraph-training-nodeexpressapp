@@ -15,38 +15,20 @@ router.get('/signin',
         failureRedirect: '/',
         failureFlash: true,
         successRedirect: '/',
-        customState: Buffer.from(req.originalUrl).toString('base64'),
       }
     )(req,res,next);
   }
 );
 
-function authCallback(opts={}) {
-  const defaultOpts = {
-    failureFlash: true,
-    failureRedirect: '/',
-    provider: 'azuread-openidconnect',
-    successRedirect: '/',
-  };
-  opts = Object.assign({}, defaultOpts, opts);
+const authCallback = [
+  (req, res, next) => passport.authenticate('azuread-openidconnect', { response: res })(req, res, next),
+  parseState
+]
 
-  return (req, res, next) => {
-    passport.authenticate(opts.provider,
-      {
-        response: res,
-        failureRedirect: opts.failureRedirect,
-        failureFlash: opts.failureFlash,
-        // successRedirect: opts.successRedirect,
-        customState: Buffer.from(req.originalUrl).toString('base64'),
-      }
-    )(req, res, next);
-  }
-}
-
-function extractState(req, res, next) {
+function parseState(req, res, next) {
   if (req.isAuthenticated()) {
     const { state } = req.body;
-    const redirect = state ? new Buffer(state, 'base64').toString() : undefined;
+    const redirect = state ? Buffer.from(state, 'base64').toString() : undefined;
     if (typeof redirect === 'string' && redirect.startsWith('/')) {
       return res.redirect(redirect);
     }
@@ -54,9 +36,7 @@ function extractState(req, res, next) {
   next();
 }
 
-// <CallbackRouteSnippet>
-router.post('/callback', authCallback(), extractState);
-// </CallbackRouteSnippet>
+router.post('/callback', authCallback);
 
 router.get('/signout',
   function(req, res) {

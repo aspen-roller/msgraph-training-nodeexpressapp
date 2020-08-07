@@ -9,17 +9,11 @@ router.get('/', function(req, res, next) {
 });
 
 function authenticate(opts={}) {
-  const defaultOpts = {
-    passThru: true,
-    provider: 'azuread-openidconnect',
-  };
-  opts = Object.assign({}, defaultOpts, opts);
-
   return (req, res, next) => {
     if (req.isAuthenticated()) {
       next();
     } else {
-      passport.authenticate(opts.provider, {
+      passport.authenticate('azuread-openidconnect', {
         response: res,
         customState: Buffer.from(req.originalUrl).toString('base64'),
       })(req, res, next);

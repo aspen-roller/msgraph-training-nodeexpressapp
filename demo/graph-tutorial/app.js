@@ -13,23 +13,25 @@ require('dotenv').config();
 var passport = require('passport');
 var OIDCStrategy = require('passport-azure-ad').OIDCStrategy;
 
+var app = express();
+
 // Configure passport
 
 // In-memory storage of logged-in users
 // For demo purposes only, production apps should store
 // this in a reliable storage
-var users = {};
+app.locals.users = {};
 
 // Passport calls serializeUser and deserializeUser to
 // manage users
 passport.serializeUser(function(user, done) {
   // Use the OID property of the user as a key
-  users[user.profile.oid] = user;
+  app.locals.users[user.profile.oid] = user;
   done (null, user.profile.oid);
 });
 
 passport.deserializeUser(function(id, done) {
-  done(null, users[id]);
+  done(null, app.locals.users[id]);
 });
 
 // <ConfigureOAuth2Snippet>
@@ -70,8 +72,8 @@ async function signInComplete(iss, sub, profile, accessToken, refreshToken, para
   let oauthToken = oauth2.accessToken.create(params);
 
   // Save the profile and tokens in user storage
-  users[profile.oid] = { profile, oauthToken };
-  return done(null, users[profile.oid]);
+  app.locals.users[profile.oid] = { profile, oauthToken };
+  return done(null, app.locals.users[profile.oid]);
 }
 // </SignInCompleteSnippet>
 
@@ -97,8 +99,6 @@ var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
 var calendarRouter = require('./routes/calendar');
 var graph = require('./graph');
-
-var app = express();
 
 // <SessionSnippet>
 // Session middleware

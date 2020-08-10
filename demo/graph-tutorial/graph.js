@@ -4,8 +4,6 @@
 const graph = require('@microsoft/microsoft-graph-client');
 require('isomorphic-fetch');
 
-const RESOURCE_ID = '0800cd2b-ec6f-4544-bfa4-047856e99e2d';
-
 module.exports = {
   getAuthenticatedClient,
   getEvents,
@@ -46,7 +44,7 @@ async function getUserDetails(accessToken) {
 async function getUserRoles(accessToken) {
   const client = getAuthenticatedClient(accessToken);
   const appRoleAssignments = await client.api('/me/appRoleAssignments')
-    .filter(`resourceId eq ${RESOURCE_ID}`)
+    .filter(`resourceId eq ${process.env.OAUTH_APP_RESOURCE_ID}`)
     .get();
   console.dir(appRoleAssignments, { depth: null });
 

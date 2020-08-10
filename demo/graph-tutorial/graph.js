@@ -10,7 +10,7 @@ module.exports = {
   getAuthenticatedClient,
   getEvents,
   getUserDetails,
-  getUserRole,
+  getUserRoles,
 };
 
 function getAuthenticatedClient(accessToken) {
@@ -43,18 +43,28 @@ async function getUserDetails(accessToken) {
   return user;
 }
 
-async function getUserRole(accessToken) {
+async function getUserRoles(accessToken) {
   const client = getAuthenticatedClient(accessToken);
   const appRoleAssignments = await client.api('/me/appRoleAssignments')
     .filter(`resourceId eq ${RESOURCE_ID}`)
-    .top(1)
     .get();
   console.dir(appRoleAssignments, { depth: null });
 
-  const appRoleAssignment = appRoleAssignments.value[0];
-  switch(appRoleAssignment.appRoleId) {
-    case 'b6fe44f2-b1ef-4e19-a06e-240078407dcb': return 'admin';
-    case 'd1c2ade8-98f8-45fd-aa4a-6d06b947c66f': return 'reader';
-    default: return 'user';
+  const userRoles = new Set();
+  for (let role of appRoleAssignments.value) {
+    const appRoleAssignment = appRoleAssignments.value[0];
+    switch(appRoleAssignment.appRoleId) {
+      case 'b6fe44f2-b1ef-4e19-a06e-240078407dcb':
+        userRoles.add('admin');
+        break;
+      case 'd1c2ade8-98f8-45fd-aa4a-6d06b947c66f':
+        userRoles.add('reader');
+        break;
+      default:
+        userRoles.add('user');
+        break;
+    }
   }
+
+  return Array.from(userRoles);
 }

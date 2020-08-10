@@ -27,7 +27,7 @@
   },
   "nodemonConfig": {
     "execMap": {
-        "js": "node"
+      "js": "node"
     },
     "ext": "js,json,yml,yaml",
     "ignore": [

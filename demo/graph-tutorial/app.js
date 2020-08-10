@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+const constants = require('./constants');
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -42,9 +44,9 @@ const oauth2 = require('simple-oauth2').create({
     secret: process.env.OAUTH_APP_PASSWORD
   },
   auth: {
-    tokenHost: process.env.OAUTH_AUTHORITY,
-    authorizePath: process.env.OAUTH_AUTHORIZE_ENDPOINT,
-    tokenPath: process.env.OAUTH_TOKEN_ENDPOINT
+    tokenHost: constants.OAUTH_AUTHORITY,
+    authorizePath: constants.OAUTH_AUTHORIZE_ENDPOINT,
+    tokenPath: constants.OAUTH_TOKEN_ENDPOINT
   }
 });
 // </ConfigureOAuth2Snippet>
@@ -80,7 +82,7 @@ async function signInComplete(iss, sub, profile, accessToken, refreshToken, para
 // Configure OIDC strategy
 passport.use(new OIDCStrategy(
   {
-    identityMetadata: `${process.env.OAUTH_AUTHORITY}${process.env.OAUTH_ID_METADATA}`,
+    identityMetadata: `${constants.OAUTH_AUTHORITY}${constants.OAUTH_ID_METADATA}`,
     clientID: process.env.OAUTH_APP_ID,
     responseType: 'code id_token',
     responseMode: 'form_post',

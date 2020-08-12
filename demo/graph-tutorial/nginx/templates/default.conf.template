@@ -1,3 +1,4 @@
+
 server {
 
     ## single instance of the app
@@ -11,6 +12,11 @@ server {
     #}
 
     # multiple instances of the app
+    listen                  80;
+    listen                  443 ssl;
+    server_name             msgraph.swarm-np.gregoryfunding.com;
+    ssl_certificate         certs/swarm-np-chain.crt;
+    ssl_certificate_key     certs/swarm-np.key;
     location /app1 {
         rewrite /app1/(.*)$ /$1 break;
         proxy_pass              http://app1:${APP_PORT};
@@ -30,3 +36,4 @@ server {
         proxy_set_header        X-Forwarded-Proto  $scheme;
     }
 }
+

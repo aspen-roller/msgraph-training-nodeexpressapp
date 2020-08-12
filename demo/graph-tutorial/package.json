@@ -19,7 +19,9 @@
     "isomorphic-fetch": "^2.2.1",
     "moment": "^2.25.3",
     "morgan": "^1.10.0",
+    "node-fetch": "^2.6.0",
     "passport-azure-ad": "^4.2.1",
+    "range_check": "^2.0.3",
     "simple-oauth2": "^3.4.0"
   },
   "devDependencies": {

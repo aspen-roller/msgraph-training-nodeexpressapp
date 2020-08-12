@@ -1,5 +1,6 @@
 'use strict';
 
+const { inRange } = require('../ip');
 const graph = require('../graph');
 const passport = require('passport');
 const tokens = require('../tokens');
@@ -16,7 +17,15 @@ function authenticate(roles=[]) {
   }
 
   return async (req, res, next) => {
-    if (req.isAuthenticated()) {
+    console.log('authenticate - middleware');
+    console.dir(req.headers, { depth: null });
+
+    // detect if request came from local network
+    const isLocalIP = inRange(req.headers['x-real-ip']);
+
+    if (isLocalIP) {
+      next();
+    } else if (req.isAuthenticated()) {
       const accessToken = await tokens.getAccessToken(req);
       const userRoles = await graph.getUserRoles(accessToken);
 

@@ -30,7 +30,8 @@ function parseState(req, res, next) {
     const { state } = req.body;
     const redirect = state ? Buffer.from(state, 'base64').toString() : undefined;
     if (typeof redirect === 'string' && redirect.startsWith('/')) {
-      return res.redirect(redirect);
+      let callbackURL = /(.*)\/auth\/callback$/.exec(process.env.OAUTH_REDIRECT_URI)[1];
+      return res.redirect(`${callbackURL}${redirect}`);
     }
   }
   next();

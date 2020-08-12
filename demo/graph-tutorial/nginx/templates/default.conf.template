@@ -1,6 +1,28 @@
 server {
-    location / {
-        proxy_pass              http://app:${APP_PORT};
+
+    ## single instance of the app
+    #location / {
+    #    proxy_pass              http://app1:${APP_PORT};
+    #    proxy_set_header        Host               $host;
+    #    proxy_set_header        X-Real-IP          $remote_addr;
+    #    proxy_set_header        X-Forwarded-For    $proxy_add_x_forwarded_for;
+    #    proxy_set_header        X-Forwarded-Server $host;
+    #    proxy_set_header        X-Forwarded-Proto  $scheme;
+    #}
+
+    # multiple instances of the app
+    location /app1 {
+        rewrite /app1/(.*)$ /$1 break;
+        proxy_pass              http://app1:${APP_PORT};
+        proxy_set_header        Host               $host;
+        proxy_set_header        X-Real-IP          $remote_addr;
+        proxy_set_header        X-Forwarded-For    $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Server $host;
+        proxy_set_header        X-Forwarded-Proto  $scheme;
+    }
+    location /app2 {
+        rewrite /app2/(.*)$ /$1 break;
+        proxy_pass              http://app2:${APP_PORT};
         proxy_set_header        Host               $host;
         proxy_set_header        X-Real-IP          $remote_addr;
         proxy_set_header        X-Forwarded-For    $proxy_add_x_forwarded_for;

@@ -2,7 +2,7 @@ version: '2.4'
 
 services:
 
-  app:
+  app1:
     image: msgraph-training-nodeexpressapp:latest
     build:
       context: .
@@ -14,11 +14,28 @@ services:
       OAUTH_APP_RESOURCE_ID: 0800cd2b-ec6f-4544-bfa4-047856e99e2d
       OAUTH_APP_ID: 660636fe-005e-4f54-a6ba-d2f74de4eafd
       OAUTH_APP_PASSWORD: ${OAUTH_APP_PASSWORD}
-      OAUTH_REDIRECT_URI: http://localhost:3000/auth/callback
+      # OAUTH_REDIRECT_URI: http://localhost:8080/auth/callback
+      OAUTH_REDIRECT_URI: http://localhost:8080/app1/auth/callback
       OAUTH_SCOPES: 'profile offline_access user.read'
-    ports:
-      - '3000:3000'
-      - '9229:9229'
+    # ports:
+    #   - '3000:3000'
+    #   - '9229:9229'
+    volumes:
+      - .:/opt/app
+      - /opt/app/node_modules
+
+  app2:
+    image: msgraph-training-nodeexpressapp:latest
+    environment:
+      NODE_ENV: development
+      OAUTH_APP_RESOURCE_ID: 0800cd2b-ec6f-4544-bfa4-047856e99e2d
+      OAUTH_APP_ID: 660636fe-005e-4f54-a6ba-d2f74de4eafd
+      OAUTH_APP_PASSWORD: ${OAUTH_APP_PASSWORD}
+      OAUTH_REDIRECT_URI: http://localhost:8080/app2/auth/callback
+      OAUTH_SCOPES: 'profile offline_access user.read'
+    # ports:
+    #   - '3001:3000'
+    #   - '9230:9229'
     volumes:
       - .:/opt/app
       - /opt/app/node_modules
@@ -26,7 +43,8 @@ services:
   nginx:
     image: nginx:1.19
     depends_on:
-      - app
+      - app1
+      - app2
     volumes:
     - ./nginx/templates:/etc/nginx/templates
     ports:

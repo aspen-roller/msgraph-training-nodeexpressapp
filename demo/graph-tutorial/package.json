@@ -31,7 +31,8 @@
     },
     "ext": "js,json,yml,yaml",
     "ignore": [
-      "node_modules/*"
+      "nginx/",
+      "node_modules/"
     ],
     "verbose": true
   }

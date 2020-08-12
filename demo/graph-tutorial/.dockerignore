@@ -1,0 +1,17 @@
+**/.env*
+.dockerignore
+.git*
+!.git/HEAD
+!.git/refs/heads/*
+.github/*
+.nyc_output
+.vscode
+
+build
+coverage
+*docker-compose*
+Dockerfile
+logs
+node_modules
+npm-debug.log
+tmp

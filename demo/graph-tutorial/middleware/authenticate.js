@@ -23,17 +23,14 @@ function authenticate(roles=[]) {
     // detect if request came from local network
     const isLocalIP = inRange(req.headers['x-real-ip']);
 
-    if (isLocalIP) {
-      next();
-    } else if (req.isAuthenticated()) {
-      const accessToken = await tokens.getAccessToken(req);
-      const userRoles = await graph.getUserRoles(accessToken);
+    // if (isLocalIP) {
+    //   next();
+    // } else
+    if (req.isAuthenticated()) {
+      console.log('allowed roles', roles);
+      console.log('user roles', req.user.jwtClaims.roles);
 
-      console.log('roles', roles);
-      console.log('userRoles', userRoles);
-      res.locals.roles = userRoles;
-
-      const intersection = roles.filter(x => userRoles.includes(x));
+      const intersection = roles.filter(x => req.user.jwtClaims.roles.includes(x));
       if (intersection.length > 0) {
         next();
       } else {

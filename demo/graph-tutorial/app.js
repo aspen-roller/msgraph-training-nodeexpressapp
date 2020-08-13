@@ -54,7 +54,7 @@ const oauth2 = require('simple-oauth2').create({
 // Callback function called once the sign-in is complete
 // and an access token has been obtained
 // <SignInCompleteSnippet>
-async function signInComplete(iss, sub, profile, accessToken, refreshToken, params, done) {
+async function signInComplete(iss, sub, profile, jwtClaims, accessToken, refreshToken, params, done) {
   if (!profile.oid) {
     return done(new Error("No OID found in user profile."));
   }
@@ -74,7 +74,7 @@ async function signInComplete(iss, sub, profile, accessToken, refreshToken, para
   let oauthToken = oauth2.accessToken.create(params);
 
   // Save the profile and tokens in user storage
-  app.locals.users[profile.oid] = { profile, oauthToken };
+  app.locals.users[profile.oid] = { jwtClaims, profile, oauthToken };
   return done(null, app.locals.users[profile.oid]);
 }
 // </SignInCompleteSnippet>
@@ -90,7 +90,6 @@ passport.use(new OIDCStrategy(
     allowHttpForRedirectUrl: true,
     clientSecret: process.env.OAUTH_APP_PASSWORD,
     validateIssuer: false,
-    passReqToCallback: false,
     scope: process.env.OAUTH_SCOPES.split(' ')
   },
   signInComplete

@@ -9,9 +9,8 @@ router.get('/', function(req, res, next) {
 });
 
 const auth = require('../middleware/authenticate');
-const { route } = require('./auth');
-router.get('/me', auth('admin'), (req, res) => {
-  res.send({ roles: res.locals.roles });
+router.get('/me', auth('Admin'), (req, res) => {
+  res.send({ roles: req.user.jwtClaims.roles });
 });
 
 router.get('/app1', (req, res, next) => {

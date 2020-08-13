@@ -35,7 +35,7 @@ function authenticate(roles=[]) {
       if (intersection.length > 0) {
         next();
       } else {
-        next(new Error(`not authorized - found roles: ${userRoles}, allowed roles: ${roles}`));
+        next(new Error(`not authorized - user roles: ${req.user.jwtClaims.roles}, allowed roles: ${roles}`));
       }
   } else {
       passport.authenticate('azuread-openidconnect', {

@@ -21,7 +21,8 @@ function authenticate(roles=[]) {
     console.dir(req.headers, { depth: null });
 
     // detect if request came from local network
-    const isLocalIP = inRange(req.headers['x-real-ip']);
+    const clientIP = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(',')[0];
+    const isLocalIP = inRange(clientIP);
 
     if (isLocalIP) {
       next();

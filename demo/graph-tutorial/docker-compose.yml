@@ -11,15 +11,10 @@ services:
         NPM_TOKEN: $NPM_TOKEN
     environment:
       NODE_ENV: development
-      # OAUTH_APP_RESOURCE_ID: 0800cd2b-ec6f-4544-bfa4-047856e99e2d
       OAUTH_APP_ID: 660636fe-005e-4f54-a6ba-d2f74de4eafd
       OAUTH_APP_PASSWORD: ${OAUTH_APP_PASSWORD}
-      # OAUTH_REDIRECT_URI: https://swarm-np-01/auth/callback
       OAUTH_REDIRECT_URI: https://msgraph.swarm-np.gregoryfunding.com/app1/auth/callback
       OAUTH_SCOPES: 'profile offline_access user.read'
-    # ports:
-    #   - '3000:3000'
-    #   - '9229:9229'
     volumes:
       - .:/opt/app
       - /opt/app/node_modules
@@ -28,14 +23,10 @@ services:
     image: msgraph-training-nodeexpressapp:latest
     environment:
       NODE_ENV: development
-      # OAUTH_APP_RESOURCE_ID: 0800cd2b-ec6f-4544-bfa4-047856e99e2d
       OAUTH_APP_ID: 660636fe-005e-4f54-a6ba-d2f74de4eafd
       OAUTH_APP_PASSWORD: ${OAUTH_APP_PASSWORD}
       OAUTH_REDIRECT_URI: https://msgraph.swarm-np.gregoryfunding.com/app2/auth/callback
       OAUTH_SCOPES: 'profile offline_access user.read'
-    # ports:
-    #   - '3001:3000'
-    #   - '9230:9229'
     volumes:
       - .:/opt/app
       - /opt/app/node_modules

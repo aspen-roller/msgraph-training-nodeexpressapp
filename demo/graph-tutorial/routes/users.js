@@ -9,23 +9,30 @@ router.get('/', function(req, res, next) {
 });
 
 const auth = require('../middleware/authenticate');
+
 router.get('/me', auth('Admin'), (req, res) => {
   res.send({ roles: req.user.jwtClaims.roles });
 });
 
-router.get('/app1', (req, res, next) => {
-  fetch('http://nginx/app1/users/me')
-    .then(result => {
-      res.send(result.text());
-    })
+router.get('/reader', auth('Reader'), (req, res) => {
+  res.send({ roles: req.user.jwtClaims.roles });
+});
+
+router.get('/test', auth(['Reader']), (req, res) => {
+  res.send({msg: 'test is working!'});
+});
+
+router.get('/app1', auth('Admin'), (req, res, next) => {
+  fetch('http://nginx/app1/users/test')
+    .then(res => res.json())
+    .then(body => res.send(body))
     .catch(next);
 });
 
-router.get('/app2', (req, res, next) => {
-  fetch('http://nginx/app2/users/me')
-    .then(result => {
-      res.send(result.text());
-    })
+router.get('/app2', auth('Admin'), (req, res, next) => {
+  fetch('http://nginx/app2/users/test')
+    .then(res => res.json())
+    .then(body => res.send(body))
     .catch(next);
 });
 

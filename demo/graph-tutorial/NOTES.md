@@ -28,6 +28,13 @@
 * docker: `Dockerfile, docker-compose.yml`
 * nginx: `nginx/templates/default.conf.template`
 
+## TODO
+* use `express-session` appropriately for production
+    * set session secret
+    * store session data safely (not in-memory)
+* store logged in users safely (not in-memory)
+* might be able to put passport customization into a dedicated library
+
 ## References
 * [Build Node.js Express apps with Microsoft Graph](https://docs.microsoft.com/en-us/graph/tutorials/node)
     * this tutorial is the basis for the demo, see my [fork](https://github.com/aspen-roller/msgraph-training-nodeexpressapp) for my modified version of the tutorial
